@@ -1,0 +1,86 @@
+//Mateusz Fydrych
+import Cocoa
+import Foundation
+import AVFoundation
+
+enum MusicType {
+    case rap
+    case jazz
+    case rock
+    case pop
+    case classical
+}
+
+struct User {
+    var name: String
+    
+    init(name: String) {
+        self.name = name
+    }
+}
+
+struct Stats {
+    var hearts = 0
+    var numberOfComments = 0
+    var shared = 0 // Only for Reels
+}
+
+class Post {
+    var user: User
+    var stats: Stats
+    var date: Date
+    
+    init(user: User, stats: Stats, date: Date) {
+        self.user = user
+        self.stats = stats
+        self.date = date
+    }
+    
+    func printInfo() {
+        print("Profile name: \(user.name) | Date: \(formatDate(date)) | Number of likes: \(formatLikes(stats.hearts)) | Number of comments: \(stats.numberOfComments)")
+    }
+    
+    func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        return formatter.string(from: date)
+    }
+    
+    func formatLikes(_ likes: Int) -> String {
+        return likes >= 1000 ? "\(likes/1000)k" : "\(likes)"
+    }
+}
+
+class Photo: Post {
+    override func printInfo() {
+        print("Post Type: Photo")
+        super.printInfo()
+    }
+}
+
+class Reels: Post {
+    var musicType: MusicType
+    
+    init(user: User, stats: Stats, date: Date, musicType: MusicType) {
+        self.musicType = musicType
+        super.init(user: user, stats: stats, date: date)
+    }
+    
+    override func printInfo() {
+        print("Post Type: Reels | Music Type: \(musicType)")
+        super.printInfo()
+    }
+}
+
+// Test data
+let user = User(name: "Apple")
+let user2 = User(name: "Mateusz")
+let user3 = User(name: "Kamila")
+let nrPost1 = Photo(user: user, stats: Stats(hearts: 500, numberOfComments: 200), date: Date())
+let nrPost2 = Reels(user: user2, stats: Stats(hearts: 1000, numberOfComments: 300, shared: 20), date: Date(), musicType: .jazz)
+let nrPost3 = Reels(user: user3, stats: Stats(hearts: 800, numberOfComments: 5, shared: 0), date: Date(), musicType: .rap)
+
+// Display test data
+nrPost1.printInfo()
+nrPost2.printInfo()
+nrPost3.printInfo()
