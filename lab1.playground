@@ -1,0 +1,175 @@
+import Cocoa
+//training 1
+/*
+var greeting = "Hello, playground"
+var zmienna = 10
+let wynik = zmienna + 5
+print(wynik)
+
+let firstName = "Mateusz"
+let lastName = "Fydrych"
+let name = "\(firstName) \(lastName)"
+print(name)
+
+var string = "slowo"
+for ch in string{
+    print(ch)
+}
+
+if firstName==lastName{
+    print("☀️")
+}else{
+    print(":)")
+}
+*/
+//exercise 1 "Strings and Text"
+//1.1
+let number1 = 10
+let number2 = 5
+print("\(number1) + \(number2) = \(number1+number2)")
+//1.2
+let slowo1 = "Gdansk University of Technology"
+var slowo2 = ""
+for ch in slowo1{
+    if ch == "n" {
+        slowo2 += "⭐️"
+    }else{
+        slowo2+=String(ch)
+    }
+}
+print(slowo2)
+//1.3
+let firstName = "Mateusz"
+let lastName = "Fydrych"
+var imie = "\(firstName) \(lastName)"
+print(String(imie.reversed()))
+
+//training 2
+//var optionalName: String? = nil
+//var greeting = "Hello!"
+//if let name = optionalName {
+//    greeting = "Hello, \(name)"
+//}
+//print(greeting)
+//
+//let firstName1: String? = nil
+//let lastName2: String = "Kowalski"
+//print("Hi \(firstName1 ?? lastName2)")
+//
+//for i in 1..<5{
+//    print(i)
+//}
+//print("\n")
+//for i in (1...3).reversed(){
+//    print(i)
+//}
+//2 excercise
+
+//2.1
+for _ in 1...11{
+    print("I will pas this course with best mark, because Swift is great!")
+}
+
+let n = 6
+var counter = 1
+while counter <= 6{
+    print(counter*counter)
+    counter = counter+1
+}
+let n2 = 4
+for _ in 1...n2{
+    for _ in 1...n2{
+        print("@", terminator: "")
+    }
+    print("")
+}
+//var arrayOfInt = [Int]()
+//var arrayOfInt2 = Array<Int>()
+//arrayOfInt.append(5)
+//print("\(arrayOfInt.count)")
+//arrayOfInt = []
+//
+//var students: [String] = ["Hommer", "Lisa", "Bart"]
+//var students2 = ["Hommer", "Lisa", "Bart"]
+//if students.isEmpty{
+//
+//}
+//students += ["Apu"]
+
+//let firstStudent = students[0]
+//students[0] = "elo"
+//students.remove(at: 0)
+
+//exercise 3
+//3.1
+var max = 0
+var numbers = [5,10,20,15,80,13]
+for i in 1...numbers.count{
+    if numbers[i-1] > max{
+        max = numbers[i-1]
+    }
+}
+print(max)
+
+print("zad3.2")
+//3.2
+for i in 1...numbers.count{
+    print(numbers[numbers.count-i], terminator: " ")
+}
+
+print("\nzad3.3")
+var allNumbers = [10, 20, 10, 11, 13, 20, 10, 30]
+var sets1 = [Int]()
+for number in allNumbers{
+    if !sets1.contains(number){
+        sets1.append(number)
+    }
+}
+print(sets1)
+
+//4.1
+var number = 10
+var divisors = Set<Int>()
+for i in 1...number{
+    print(i)
+    if(number%i == 0){
+        divisors.insert(i)
+    }
+}
+print(divisors.sorted())
+
+//5
+var namesOfIntegers = [Int: String]()
+//5.1
+var flights: [[String: String]] = [
+    [
+            "flightNumber" : "AA8025",
+            "destination" : "Copenhagen"
+        ],
+        [
+            "flightNumber" : "BA1442",
+            "destination" : "New York"
+        ],
+        [
+            "flightNumber" : "BD6741",
+            "destination" : "Barcelona"
+        ]
+]
+print(flights)
+var flightNumbers = [String]()
+for ch in flights{
+    for (ch1,ch2) in ch{
+        if(ch1 == "flightNumber"){
+            flightNumbers.append(ch2)
+        }
+    }
+}
+print(flightNumbers)
+//5.2
+let names = ["Hommer","Lisa","Bart"]
+var fullName = [[String: String]]()
+for name in names {
+    let dict: [String: String] = ["firstName": name, "lastName": "Simpson"]
+    fullName.append(dict)
+}
+print(fullName)
