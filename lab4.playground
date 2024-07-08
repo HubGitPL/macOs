@@ -1,0 +1,137 @@
+//Mateusz Fydrych
+import Foundation
+
+struct Coordinate {
+    var latitude: Double
+    var longitude: Double
+}
+
+struct City {
+    let id: Int
+    let name: String
+    let description: String
+    let coordinate: Coordinate
+    let keywords: [String]
+    var locations: [Location]
+}
+
+struct Location {
+    let id: Int
+    let type: String
+    let name: String
+    let rating: Int
+}
+
+var cities: [City] = []
+
+func haversineDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double) -> Double {
+    let dLat = (lat2 - lat1).degreesToRadians
+    let dLon = (lon2 - lon1).degreesToRadians
+
+    let a = sin(dLat/2) * sin(dLat/2) +
+            cos(lat1.degreesToRadians) * cos(lat2.degreesToRadians) *
+            sin(dLon/2) * sin(dLon/2)
+    let c = 2 * atan2(sqrt(a), sqrt(1-a))
+    let d = 6371 * c
+    return d
+}
+
+func calculateDistance(city1: City, city2: City) -> Double {
+    return haversineDistance(lat1: city1.coordinate.latitude, lon1: city1.coordinate.longitude, lat2: city2.coordinate.latitude, lon2: city2.coordinate.longitude)
+}
+
+func searchCityByName(name: String) -> [City] {
+    return cities.filter { $0.name == name }
+}
+
+func searchCityByKeyword(keyword: String) -> [City] {
+    return cities.filter { $0.keywords.contains(keyword) }
+}
+
+func findClosestAndFarthestCity(userCoordinate: Coordinate) -> (closest: City, farthest: City) {
+    var closestCity = cities[0]
+    var farthestCity = cities[0]
+    var minDistance = calculateDistance(city1: closestCity, city2: City(id: 0, name: "", description: "", coordinate: userCoordinate, keywords: [], locations: []))
+    var maxDistance = minDistance
+
+    for city in cities {
+        let distance = calculateDistance(city1: city, city2: City(id: 0, name: "", description: "", coordinate: userCoordinate, keywords: [], locations: []))
+        if distance < minDistance {
+            minDistance = distance
+            closestCity = city
+        }
+        if distance > maxDistance {
+            maxDistance = distance
+            farthestCity = city
+        }
+    }
+    return (closestCity, farthestCity)
+}
+
+func findTwoFarthestCities() -> (City, City) {
+    var city1 = cities[0]
+    var city2 = cities[1]
+    var maxDistance = calculateDistance(city1: city1, city2: city2)
+
+    for i in 0..<cities.count {
+        for j in i+1..<cities.count {
+            let distance = calculateDistance(city1: cities[i], city2: cities[j])
+            if distance > maxDistance {
+                maxDistance = distance
+                city1 = cities[i]
+                city2 = cities[j]
+            }
+        }
+    }
+    return (city1, city2)
+}
+
+func findCitiesWithFiveStarRestaurants() -> [City] {
+    return cities.filter { city in
+        city.locations.contains { location in
+            location.type == "restaurant" && location.rating == 5
+        }
+    }
+}
+
+func findLocationsInCity(city: City) -> [Location] {
+    return city.locations.sorted { $0.rating > $1.rating }
+}
+
+func displayCitiesWithFiveStarLocations() {
+    for city in cities {
+        let fiveStarLocations = city.locations.filter { $0.rating == 5 }
+        if !fiveStarLocations.isEmpty {
+            print("\(city.name) has \(fiveStarLocations.count) 5-star locations:")
+            for location in fiveStarLocations {
+                print(location.name)
+            }
+        }
+    }
+}
+
+extension Double {
+    var degreesToRadians: Double { return self * .pi / 180 }
+}
+
+let location1 = Location(id: 1, type: "restaurant", name: "Restaurant 1", rating: 5)
+let location3 = Location(id: 1, type: "restaurant", name: "Restaurant 2", rating: 5)
+let location2 = Location(id: 2, type: "pub", name: "Pub 1", rating: 4)
+
+let cityNames = ["Zurich", "Moscow", "Tokyo", "London", "Paris", "New York", "Los Angeles", "Berlin", "Madrid", "Rome", "Sydney", "Toronto", "Dubai", "Singapore", "Hong Kong", "Amsterdam", "Istanbul", "Rio de Janeiro", "Mumbai", "Shanghai"]
+
+for i in 0..<19 {
+    let city = City(id: i+1, name: cityNames[i], description: "Description \(i+1)", coordinate: Coordinate(latitude: 52.5200 + Double(i), longitude: 13.4050 + Double(i)), keywords: ["keyword1", "keyword2"], locations: [location1, location2])
+    cities.append(city)
+}
+let city20 = City(id: 20, name: "Washington", description: "xyz", coordinate: Coordinate(latitude: 543, longitude: 23), keywords: ["beer", "pizza"], locations: [location1, location3])
+cities.append(city20)
+
+print(searchCityByName(name: "City 1"))
+print(searchCityByKeyword(keyword: "party"))
+print(calculateDistance(city1: cities[0], city2: cities[1]))
+print(findClosestAndFarthestCity(userCoordinate: Coordinate(latitude: 51.5074, longitude: 0.1278)))
+print(findTwoFarthestCities())
+print(findCitiesWithFiveStarRestaurants())
+print(findLocationsInCity(city: cities[0]))
+displayCitiesWithFiveStarLocations()
